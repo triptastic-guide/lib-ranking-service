@@ -1,0 +1,20 @@
+{
+    "files.autoSave": "onFocusChange",
+    "editor.tabSize": 2,
+    "eslint.alwaysShowStatus": true,
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.fixAll.eslint": "explicit"
+    },
+    "files.exclude": {
+        "node_modules/": true,
+        "lib/multus/lambdas/node_modules/": true
+    },
+    "javascript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.importModuleSpecifier": "relative"
+}

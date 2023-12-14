@@ -1,0 +1,9 @@
+dist/*
+.dev-env.sh
+.dev-env-docker.sh
+env.sh
+node_modules/*
+cdk.out/
+logs/
+src/run.ts
+.idea/

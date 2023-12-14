@@ -1,0 +1,74 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*'
+
+name: Publish library
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  AWS_DEFAULT_REGION: 'eu-central-1'
+  AWS_ACCOUNT: '838300766309'
+
+jobs:
+  publish-library:
+    runs-on: ubuntu-latest
+    name: publish-library
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/gh-admin
+          role-session-name: ${{ github.event.repository.name }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+
+      - name: Login to Amazon Codeartifact
+        id: login-codeartifact
+        run: |
+          NPM_TOKEN=$(aws codeartifact get-authorization-token --domain gigi --domain-owner 838300766309 --duration-seconds 900 --query authorizationToken --output text)
+          echo "NPM_TOKEN=${NPM_TOKEN}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # - name: Run tests
+      #   run: |
+      #     npm test
+
+      - name: Run build
+        run: |
+          npm run build
+
+      - name: Publish
+        if: always() && (github.ref == 'refs/heads/main')
+        run: |
+          cp package.json dist/
+          cp .npmrc dist/
+          pushd dist/
+          npm publish
+          popd

@@ -1,0 +1,15 @@
+
+{
+  "extends": ["@cloudautomationsolutions/eslint-config"],
+  "overrides": [
+    {
+      "files": [
+        "*.js",
+        "*.ts"
+      ],
+      "rules": {
+        "import/no-unresolved": "off"
+      }
+    }
+  ]
+}

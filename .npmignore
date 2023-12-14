@@ -1,0 +1,10 @@
+*.ts
+!*.d.ts
+tsconfig.json
+.vscode/*
+.dev-env*
+Dockerfile
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
